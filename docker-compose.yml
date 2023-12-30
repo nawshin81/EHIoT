@@ -1,0 +1,32 @@
+version: '3.3'
+
+services:
+
+  # adminer:
+  #   image: adminer
+  #   container_name: ehiot-mysql-adminer
+  #   restart: always
+  #   ports:
+  #     - "8080:8080"
+
+  node-red:
+    restart: always
+    container_name: ehiot-node-red
+    build: 
+      context: ./nodered
+      dockerfile: Dockerfile
+    # environment:
+    #   - TZ=Europe/Amsterdam
+    #   - MYSQLUSERNAME=root
+    #   - MYSQLPASSWORD=example
+    ports:
+      - "1880:1880"
+    # volumes:
+    #   - ./nodered-custom/data:/data 
+
+  # influxdb:
+  #   container_name: se4iot-influxdb
+  #   image: influxdb:2.7.4
+  #   ports:
+  #     - 8086:8086
+
