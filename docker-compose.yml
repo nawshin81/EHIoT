@@ -21,8 +21,8 @@ services:
     #   - MYSQLPASSWORD=example
     ports:
       - "1880:1880"
-    # volumes:
-    #   - ./nodered-custom/data:/data 
+    volumes:
+      - ./nodered/data:/data 
 
   # influxdb:
   #   container_name: se4iot-influxdb
