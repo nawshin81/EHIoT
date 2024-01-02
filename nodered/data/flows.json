@@ -155,6 +155,21 @@
         "className": ""
     },
     {
+        "id": "26792ae0515e310b",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "EHIoT",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "1.x",
+        "url": "http://localhost:8086",
+        "timeout": "10",
+        "rejectUnauthorized": true
+    },
+    {
         "id": "9d21464ebddd23a1",
         "type": "mqtt in",
         "z": "93e965988dc1ef0f",
@@ -167,7 +182,7 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 110,
+        "x": 90,
         "y": 200,
         "wires": [
             [
@@ -214,18 +229,19 @@
         "type": "function",
         "z": "93e965988dc1ef0f",
         "name": "function 1",
-        "func": "// msg.topic=\"InfluxData\"\n// var Temp = msg.payload\n// msg.payload = {\n//     \"temperature\": Temp,\n// }\n// return msg;\nmsg.topic=\"InfluxData\"\nvar Heartbeat = msg.payload.heartrate\nvar Temp = msg.payload.temperature\nvar Xacc = msg.payload.xAcceleration\nmsg.payload = {\n    \"heartRate\": Heartbeat,\n    \"temperature\": Temp,\n    \"x-axis acceleration\": Xacc,\n    // \"accelerometer\": msg.payload.accelerometer ?? 0,\n    // \"area\": msg.payload.area,\n    // \"cowId\": msg.payload.cowId\n}\nreturn msg;",
+        "func": "msg.topic=\"InfluxData\"\nvar Heartbeat = msg.payload.heartrate\nvar Temp = msg.payload.temperature\nvar Xacc = msg.payload.xAcceleration\nvar Yacc= msg.payload.yAcceleration\nvar Zacc= msg.payload.zAcceleration\nmsg.payload = {\n    \"heartRate\": Heartbeat,\n    \"temperature\": Temp,\n    \"x-axis acceleration\": Xacc,\n    \"y-axis acceleration\": Yacc,\n    \"z-axis acceleration\": Zacc,\n}\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1000,
-        "y": 300,
+        "x": 1100,
+        "y": 400,
         "wires": [
             [
-                "b2012431e11ea5cc"
+                "b2012431e11ea5cc",
+                "4a203da309f73ccf"
             ]
         ]
     },
@@ -242,8 +258,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1160,
-        "y": 300,
+        "x": 1200,
+        "y": 480,
         "wires": []
     },
     {
@@ -259,7 +275,7 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 120,
+        "x": 100,
         "y": 300,
         "wires": [
             [
@@ -314,7 +330,7 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 140,
+        "x": 120,
         "y": 400,
         "wires": [
             [
@@ -369,11 +385,11 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 220,
-        "y": 520,
+        "x": 120,
+        "y": 500,
         "wires": [
             [
-                "912a54501f239d2d"
+                "9b5d022d0712f32d"
             ]
         ]
     },
@@ -389,6 +405,13 @@
                 "pt": "msg",
                 "to": "payload",
                 "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "yAcceleration",
+                "tot": "str"
             }
         ],
         "action": "",
@@ -396,10 +419,12 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 470,
-        "y": 520,
+        "x": 530,
+        "y": 500,
         "wires": [
-            []
+            [
+                "0de9d6a744080b97"
+            ]
         ]
     },
     {
@@ -414,6 +439,13 @@
                 "pt": "msg",
                 "to": "payload",
                 "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "zAcceleration",
+                "tot": "str"
             }
         ],
         "action": "",
@@ -421,10 +453,12 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 470,
+        "x": 530,
         "y": 600,
         "wires": [
-            []
+            [
+                "0de9d6a744080b97"
+            ]
         ]
     },
     {
@@ -440,11 +474,11 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 220,
+        "x": 120,
         "y": 600,
         "wires": [
             [
-                "6aab9246f8209058"
+                "e44e8a92ba85b3f7"
             ]
         ]
     },
@@ -510,14 +544,14 @@
         "joinerType": "str",
         "accumulate": false,
         "timeout": "",
-        "count": "3",
+        "count": "5",
         "reduceRight": false,
         "reduceExp": "",
         "reduceInit": "",
         "reduceInitType": "",
         "reduceFixup": "",
-        "x": 800,
-        "y": 300,
+        "x": 840,
+        "y": 400,
         "wires": [
             [
                 "13abf6d3064da49d",
@@ -537,8 +571,58 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 960,
-        "y": 180,
+        "x": 1040,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "9b5d022d0712f32d",
+        "type": "json",
+        "z": "93e965988dc1ef0f",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 310,
+        "y": 500,
+        "wires": [
+            [
+                "912a54501f239d2d"
+            ]
+        ]
+    },
+    {
+        "id": "e44e8a92ba85b3f7",
+        "type": "json",
+        "z": "93e965988dc1ef0f",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 310,
+        "y": 600,
+        "wires": [
+            [
+                "6aab9246f8209058"
+            ]
+        ]
+    },
+    {
+        "id": "4a203da309f73ccf",
+        "type": "influxdb out",
+        "z": "93e965988dc1ef0f",
+        "influxdb": "26792ae0515e310b",
+        "name": "EHIoTDB",
+        "measurement": "",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 1320,
+        "y": 400,
         "wires": []
     }
 ]
