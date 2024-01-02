@@ -1,4 +1,5 @@
-Data Simulation on Wokwi
-Keep the tab open in a shared screen, as switching to another screen turns off the simulation.
+**Data Simulation on Wokwi**
 
-[Patient Monitoring System](https://wokwi.com/projects/385760899767485441)
+The link for the data simulation is [Patient Monitoring System](https://wokwi.com/projects/385760899767485441).
+
+Keep the tab open in a shared screen, as switching to another screen turns off the simulation.
