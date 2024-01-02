@@ -167,11 +167,11 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 190,
-        "y": 260,
+        "x": 110,
+        "y": 200,
         "wires": [
             [
-                "d52a9f7303f5921f"
+                "e7476496415f167e"
             ]
         ]
     },
@@ -185,8 +185,8 @@
                 "t": "set",
                 "p": "payload",
                 "pt": "msg",
-                "to": "temperature",
-                "tot": "num"
+                "to": "payload",
+                "tot": "msg"
             },
             {
                 "t": "set",
@@ -201,13 +201,11 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 440,
-        "y": 260,
+        "x": 520,
+        "y": 200,
         "wires": [
             [
-                "13abf6d3064da49d",
-                "4fd459bd611e2b98",
-                "b2012431e11ea5cc"
+                "0de9d6a744080b97"
             ]
         ]
     },
@@ -216,17 +214,19 @@
         "type": "function",
         "z": "93e965988dc1ef0f",
         "name": "function 1",
-        "func": "msg.topic=\"InfluxData\"\nmsg.payload = {\n    // \"heartRate\": msg.payload.heartRate,\n    \"temperature\": msg.payload.temperature,\n}\nreturn msg;",
+        "func": "// msg.topic=\"InfluxData\"\n// var Temp = msg.payload\n// msg.payload = {\n//     \"temperature\": Temp,\n// }\n// return msg;\nmsg.topic=\"InfluxData\"\nvar Heartbeat = msg.payload.heartrate\nvar Temp = msg.payload.temperature\nvar Xacc = msg.payload.xAcceleration\nmsg.payload = {\n    \"heartRate\": Heartbeat,\n    \"temperature\": Temp,\n    \"x-axis acceleration\": Xacc,\n    // \"accelerometer\": msg.payload.accelerometer ?? 0,\n    // \"area\": msg.payload.area,\n    // \"cowId\": msg.payload.cowId\n}\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 660,
-        "y": 260,
+        "x": 1000,
+        "y": 300,
         "wires": [
-            []
+            [
+                "b2012431e11ea5cc"
+            ]
         ]
     },
     {
@@ -242,36 +242,303 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 760,
-        "y": 180,
+        "x": 1160,
+        "y": 300,
         "wires": []
     },
     {
-        "id": "4fd459bd611e2b98",
-        "type": "ui_gauge",
+        "id": "751deabdf9c9eb3e",
+        "type": "mqtt in",
         "z": "93e965988dc1ef0f",
         "name": "",
-        "group": "c3e4fac950f3c11e",
-        "order": 0,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "gauge",
-        "label": "units",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "38",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
+        "topic": "/EHIoT/heartbeat",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "c923ddb62c759b56",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 300,
+        "wires": [
+            [
+                "fc32598c42b13e53"
+            ]
+        ]
+    },
+    {
+        "id": "4bcf42f6975257d1",
+        "type": "change",
+        "z": "93e965988dc1ef0f",
+        "name": "set heartbeat rate",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "heartrate",
+                "tot": "str"
+            }
         ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 730,
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 510,
+        "y": 300,
+        "wires": [
+            [
+                "0de9d6a744080b97"
+            ]
+        ]
+    },
+    {
+        "id": "406af0af0f4a5c17",
+        "type": "mqtt in",
+        "z": "93e965988dc1ef0f",
+        "name": "",
+        "topic": "/EHIoT/acceleration/x",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "c923ddb62c759b56",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
         "y": 400,
+        "wires": [
+            [
+                "9779f50c56a9b2ba"
+            ]
+        ]
+    },
+    {
+        "id": "0ed3a651e30d3e42",
+        "type": "change",
+        "z": "93e965988dc1ef0f",
+        "name": "set acceleration of x-axis",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "xAccleration",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 530,
+        "y": 400,
+        "wires": [
+            [
+                "0de9d6a744080b97"
+            ]
+        ]
+    },
+    {
+        "id": "5439d48f750516f1",
+        "type": "mqtt in",
+        "z": "93e965988dc1ef0f",
+        "name": "",
+        "topic": "/EHIoT/acceleration/y",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "c923ddb62c759b56",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 220,
+        "y": 520,
+        "wires": [
+            [
+                "912a54501f239d2d"
+            ]
+        ]
+    },
+    {
+        "id": "912a54501f239d2d",
+        "type": "change",
+        "z": "93e965988dc1ef0f",
+        "name": "set acceleration of y-axis",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 470,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6aab9246f8209058",
+        "type": "change",
+        "z": "93e965988dc1ef0f",
+        "name": "set acceleration of z-axis",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 470,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f3951aee539a57e3",
+        "type": "mqtt in",
+        "z": "93e965988dc1ef0f",
+        "name": "",
+        "topic": "/EHIoT/acceleration/z",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "c923ddb62c759b56",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 220,
+        "y": 600,
+        "wires": [
+            [
+                "6aab9246f8209058"
+            ]
+        ]
+    },
+    {
+        "id": "e7476496415f167e",
+        "type": "json",
+        "z": "93e965988dc1ef0f",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 310,
+        "y": 200,
+        "wires": [
+            [
+                "d52a9f7303f5921f"
+            ]
+        ]
+    },
+    {
+        "id": "fc32598c42b13e53",
+        "type": "json",
+        "z": "93e965988dc1ef0f",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 310,
+        "y": 300,
+        "wires": [
+            [
+                "4bcf42f6975257d1"
+            ]
+        ]
+    },
+    {
+        "id": "9779f50c56a9b2ba",
+        "type": "json",
+        "z": "93e965988dc1ef0f",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 310,
+        "y": 400,
+        "wires": [
+            [
+                "0ed3a651e30d3e42"
+            ]
+        ]
+    },
+    {
+        "id": "0de9d6a744080b97",
+        "type": "join",
+        "z": "93e965988dc1ef0f",
+        "name": "join all sensors data",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "3",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 800,
+        "y": 300,
+        "wires": [
+            [
+                "13abf6d3064da49d",
+                "45c1009c7cde270f"
+            ]
+        ]
+    },
+    {
+        "id": "45c1009c7cde270f",
+        "type": "debug",
+        "z": "93e965988dc1ef0f",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 180,
         "wires": []
     }
 ]
