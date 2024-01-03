@@ -1,0 +1,144 @@
+#include <WiFi.h>
+#include <PubSubClient.h>
+#include <DHTesp.h>  // for ESP8266/ESP32 boards
+#include <HeartBeat.h>
+#include <Adafruit_MPU6050.h> // Accelerometer and Gyro sensor for fall detection
+#include <Adafruit_Sensor.h>
+#include <Wire.h>
+// Connect the SDA pin of the MPU6050 to the GPIO 21 pin (SDA) on the ESP32.
+// Connect the SCL pin of the MPU6050 to the GPIO 22 pin (SCL) on the ESP32.
+
+DHTesp dht;
+Adafruit_MPU6050 mpu;
+const int heartbeatPin = 34; // heartbeat analog pin
+int val = 0;
+const int DHT_PIN = 15;
+
+const char* ssid = "Wokwi-GUEST"; ///  wifi ssid
+const char* password = "";
+const char* mqtt_server = "test.mosquitto.org"; // mosquitto server url
+
+WiFiClient espClient;
+PubSubClient client(espClient);
+
+unsigned long lastMsg = 0;
+
+void setup_wifi() {
+  delay(10);
+  Serial.println();
+  Serial.println("Connecting to");
+  Serial.println(ssid);
+
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  randomSeed(micros());
+
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+}
+void reconnect() {
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    String clientId = "ESP32Client-";
+    clientId += String(random(0xffff), HEX);
+    if (client.connect(clientId.c_str())) {
+      client.subscribe("/EHIoT");
+      Serial.println("Connected");
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 0.5 seconds");
+      delay(500);
+    }
+  }
+}
+void callback(char* topic, byte* payload, unsigned int length) {
+  Serial.print("Message arrived [");
+  Serial.print(topic);
+  Serial.print("] ");
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)payload[i]);
+  }
+}
+void setup() {
+  pinMode(2, OUTPUT);
+  Serial.begin(115200);
+  setup_wifi();
+  client.setServer(mqtt_server, 1883);
+  client.setCallback(callback);
+  dht.setup(DHT_PIN, DHTesp::DHT22);
+  // mpu 
+  if (!mpu.begin()) {
+		Serial.println("Failed to find MPU6050 chip");
+		while (1) {
+		  delay(10);
+		}
+	}
+	Serial.println("MPU6050 Found!");
+	// set accelerometer range to +-8G
+	mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
+	// set gyro range to +- 500 deg/s
+	mpu.setGyroRange(MPU6050_RANGE_500_DEG);
+	// set filter bandwidth to 21 Hz
+	mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
+}
+
+void loop() {
+  delay(10); // this speeds up the simulation
+  sensors_event_t a, g, temp;
+	mpu.getEvent(&a, &g, &temp);
+  String xVal= String(a.acceleration.x);
+  String yVal= String(a.acceleration.y);
+  String zVal= String(a.acceleration.z);
+
+  String accSensor = "Acceleration X: "+ xVal+ ", Y: "+ yVal + ", Z: "+ zVal;
+
+	/* Print out the values , declare a variable to assaign the value and for initial consideration value bigger than 1Z is considered fall*/
+
+	// Serial.print("Acceleration X: ");
+	// Serial.print(a.acceleration.x);
+	// Serial.print(", Y: ");
+	// Serial.print(a.acceleration.y);
+	// Serial.print(", Z: ");
+	// Serial.print(a.acceleration.z);
+
+
+  //heartbeat
+  val = map(analogRead(heartbeatPin), 0, 1023, 0, 50); // read the input pin
+  String hbVal= String(val);
+
+  if (!client.connected()) {
+    reconnect();
+  }
+  client.loop();
+
+  unsigned long now = millis();
+  if (now - lastMsg > 2000) { //perintah publish data
+    lastMsg = now;
+    TempAndHumidity  data = dht.getTempAndHumidity();
+
+    String temp = String(data.temperature, 2);
+    client.publish("/EHIoT/temp", temp.c_str()); // publish temp topic /EHIoT/temp
+    client.publish("/EHIoT/acceleration/x", xVal.c_str());
+    client.publish("/EHIoT/acceleration/y", yVal.c_str());
+    client.publish("/EHIoT/acceleration/z", zVal.c_str());
+    client.publish("/EHIoT/heartbeat", hbVal.c_str());
+    
+    Serial.print("Temperature: ");
+    Serial.println(temp);
+    Serial.print(accSensor);
+	  Serial.println(" m/s^2");
+    Serial.print("Heartbeat Value: ");          // debug value
+    Serial.println(val);          // debug value
+  }
+
+}
+
