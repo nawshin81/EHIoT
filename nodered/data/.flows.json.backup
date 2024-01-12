@@ -39,14 +39,6 @@
         "sessionExpiry": ""
     },
     {
-        "id": "2da49d306e352e79",
-        "type": "ui_tab",
-        "name": "body temperature",
-        "icon": "dashboard",
-        "disabled": false,
-        "hidden": false
-    },
-    {
         "id": "3c0b23800b402837",
         "type": "ui_base",
         "theme": {
@@ -144,17 +136,6 @@
         }
     },
     {
-        "id": "c3e4fac950f3c11e",
-        "type": "ui_group",
-        "name": "Default",
-        "tab": "2da49d306e352e79",
-        "order": 1,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
         "id": "26792ae0515e310b",
         "type": "influxdb",
         "hostname": "127.0.0.1",
@@ -164,9 +145,9 @@
         "name": "EHIoT",
         "usetls": false,
         "tls": "",
-        "influxdbVersion": "1.x",
-        "url": "http://localhost:8086",
-        "timeout": "10",
+        "influxdbVersion": "2.0",
+        "url": "http://ehiot-main-influxdb-1:8086",
+        "timeout": "5",
         "rejectUnauthorized": true
     },
     {
@@ -229,7 +210,7 @@
         "type": "function",
         "z": "93e965988dc1ef0f",
         "name": "function 1",
-        "func": "msg.topic=\"InfluxData\"\nvar Heartbeat = msg.payload.heartrate\nvar Temp = msg.payload.temperature \nvar Xacc = msg.payload.xAcceleration\nvar Yacc= msg.payload.yAcceleration\nvar Zacc= msg.payload.zAcceleration\nmsg.payload = {\n    \"heartRate\": Heartbeat,\n    \"temperature\": Temp,\n    \"x_axis_acceleration\": Xacc,\n    \"y_axis_acceleration\": Yacc,\n    \"z_axis_acceleration\": Zacc,\n}\nreturn msg;",
+        "func": "msg.topic=\"InfluxData\"\nvar Heartbeat = msg.payload.heartrate\nvar Temp = msg.payload.temperature \nvar Xacc = msg.payload.xAcceleration\nvar Yacc= msg.payload.yAcceleration\nvar Zacc= msg.payload.zAcceleration\nmsg.payload = {\n    \"heartRate\": Heartbeat,\n    \"temperature\": Temp,\n    \"x_axis_acceleration\": Xacc,\n    \"y_axis_acceleration\": Yacc,\n    \"z_axis_acceleration\": Zacc,\n}\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -542,9 +523,9 @@
         "key": "topic",
         "joiner": "\\n",
         "joinerType": "str",
-        "accumulate": true,
+        "accumulate": false,
         "timeout": "",
-        "count": "",
+        "count": "5",
         "reduceRight": false,
         "reduceExp": "",
         "reduceInit": "",
@@ -568,7 +549,8 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
         "x": 1040,
@@ -619,8 +601,8 @@
         "database": "database",
         "precisionV18FluxV20": "ms",
         "retentionPolicyV18Flux": "",
-        "org": "organisation",
-        "bucket": "bucket",
+        "org": "UNIVAQ",
+        "bucket": "Data_EHIOT",
         "x": 1320,
         "y": 400,
         "wires": []
