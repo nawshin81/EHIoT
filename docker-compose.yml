@@ -29,7 +29,7 @@ services:
     ports:
       - 8086:8086
     volumes:
-      - ./nodered/data:/data 
+      - ./influxdb/data:/data 
     environment:
       - INFLUXDB_DB=EHIOT
       - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}

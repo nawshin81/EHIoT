@@ -210,7 +210,7 @@
         "type": "function",
         "z": "93e965988dc1ef0f",
         "name": "function 1",
-        "func": "msg.topic=\"InfluxData\"\nvar Heartbeat = msg.payload.heartrate\nvar Temp = msg.payload.temperature \nvar Xacc = msg.payload.xAcceleration\nvar Yacc= msg.payload.yAcceleration\nvar Zacc= msg.payload.zAcceleration\nmsg.payload = {\n    \"heartRate\": Heartbeat,\n    \"temperature\": Temp,\n    \"x_axis_acceleration\": Xacc,\n    \"y_axis_acceleration\": Yacc,\n    \"z_axis_acceleration\": Zacc,\n}\nreturn msg;\n",
+        "func": "msg.topic=\"InfluxData\"\nvar Heartbeat = parseFloat(msg.payload.heartrate)\nvar Temp = parseFloat(msg.payload.temperature)\nvar Xacc = parseFloat(msg.payload.xAcceleration)\nvar Yacc= parseFloat(msg.payload.yAcceleration)\nvar Zacc= parseFloat(msg.payload.zAcceleration)\nmsg.payload = {\n    \"heartRate\": Heartbeat,\n    \"temperature\": Temp,\n    \"x_axis_acceleration\": Xacc,\n    \"y_axis_acceleration\": Yacc,\n    \"z_axis_acceleration\": Zacc,\n}\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
