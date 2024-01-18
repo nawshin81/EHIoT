@@ -210,7 +210,7 @@
         "type": "function",
         "z": "93e965988dc1ef0f",
         "name": "function 1",
-        "func": "msg.topic=\"InfluxData\"\nvar Heartbeat = parseFloat(msg.payload.heartrate)\nvar Temp = parseFloat(msg.payload.temperature)\nvar Xacc = parseFloat(msg.payload.xAcceleration)\nvar Yacc= parseFloat(msg.payload.yAcceleration)\nvar Zacc= parseFloat(msg.payload.zAcceleration)\nmsg.payload = {\n    \"heartRate\": Heartbeat,\n    \"temperature\": Temp,\n    \"x_axis_acceleration\": Xacc,\n    \"y_axis_acceleration\": Yacc,\n    \"z_axis_acceleration\": Zacc,\n}\nreturn msg;\n",
+        "func": "msg.topic=\"InfluxData\"\nvar Pid = parseInt(msg.payload.pid)\nvar Heartbeat = parseFloat(msg.payload.heartrate)\nvar Temp = parseFloat(msg.payload.temperature)\nvar Xacc = parseFloat(msg.payload.xAcceleration)\nvar Yacc= parseFloat(msg.payload.yAcceleration)\nvar Zacc= parseFloat(msg.payload.zAcceleration)\nmsg.payload = {\n    \"patient_id\": Pid,\n    \"heartRate\": Heartbeat,\n    \"temperature\": Temp,\n    \"x_axis_acceleration\": Xacc,\n    \"y_axis_acceleration\": Yacc,\n    \"z_axis_acceleration\": Zacc,\n}\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -218,7 +218,7 @@
         "finalize": "",
         "libs": [],
         "x": 1100,
-        "y": 400,
+        "y": 260,
         "wires": [
             [
                 "b2012431e11ea5cc",
@@ -239,8 +239,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1200,
-        "y": 480,
+        "x": 1260,
+        "y": 320,
         "wires": []
     },
     {
@@ -525,14 +525,14 @@
         "joinerType": "str",
         "accumulate": false,
         "timeout": "",
-        "count": "5",
+        "count": "6",
         "reduceRight": false,
         "reduceExp": "",
         "reduceInit": "",
         "reduceInitType": "",
         "reduceFixup": "",
-        "x": 840,
-        "y": 400,
+        "x": 860,
+        "y": 260,
         "wires": [
             [
                 "13abf6d3064da49d",
@@ -553,8 +553,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1040,
-        "y": 260,
+        "x": 1020,
+        "y": 160,
         "wires": []
     },
     {
@@ -604,7 +604,78 @@
         "org": "UNIVAQ",
         "bucket": "Data_EHIOT",
         "x": 1320,
-        "y": 400,
+        "y": 220,
         "wires": []
+    },
+    {
+        "id": "9c95adfa60b6a539",
+        "type": "mqtt in",
+        "z": "93e965988dc1ef0f",
+        "name": "",
+        "topic": "/EHIoT/pid",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "c923ddb62c759b56",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 80,
+        "y": 120,
+        "wires": [
+            [
+                "46dea6db0337c3bb"
+            ]
+        ]
+    },
+    {
+        "id": "46dea6db0337c3bb",
+        "type": "json",
+        "z": "93e965988dc1ef0f",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 310,
+        "y": 120,
+        "wires": [
+            [
+                "b57627bddd9de8e9"
+            ]
+        ]
+    },
+    {
+        "id": "b57627bddd9de8e9",
+        "type": "change",
+        "z": "93e965988dc1ef0f",
+        "name": "set patient id",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "pid",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 490,
+        "y": 120,
+        "wires": [
+            [
+                "0de9d6a744080b97"
+            ]
+        ]
     }
 ]

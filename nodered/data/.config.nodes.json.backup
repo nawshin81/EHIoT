@@ -706,5 +706,44 @@
                 "file": "/data/node_modules/node-red-contrib-mqtt-broker/mosca.js"
             }
         }
+    },
+    "node-red-contrib-aedes": {
+        "name": "node-red-contrib-aedes",
+        "version": "0.6.0",
+        "local": true,
+        "user": false,
+        "nodes": {
+            "aedes-mqtt-broker": {
+                "name": "aedes-mqtt-broker",
+                "types": [
+                    "aedes broker"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-aedes",
+                "file": "/data/node_modules/node-red-contrib-aedes/aedes.js"
+            }
+        }
+    },
+    "node-red-node-mysql": {
+        "name": "node-red-node-mysql",
+        "version": "2.0.0",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "mysql": {
+                "name": "mysql",
+                "types": [
+                    "MySQLdatabase",
+                    "mysql"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-node-mysql",
+                "file": "/data/node_modules/node-red-node-mysql/68-mysql.js"
+            }
+        }
     }
 }
