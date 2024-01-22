@@ -2,23 +2,12 @@ version: '3.3'
 
 services:
 
-  # adminer:
-  #   image: adminer
-  #   container_name: ehiot-mysql-adminer
-  #   restart: always
-  #   ports:
-  #     - "8080:8080"
-
   node-red:
     restart: always
     container_name: ehiot-node-red
     build: 
       context: ./nodered
       dockerfile: Dockerfile
-    # environment:
-    #   - TZ=Europe/Amsterdam
-    #   - MYSQLUSERNAME=root
-    #   - MYSQLPASSWORD=example
     ports:
       - "1880:1880"
     volumes:
@@ -29,10 +18,15 @@ services:
     ports:
       - 8086:8086
     volumes:
-      - ./influxdb/data:/data 
+      - ./influxdb/data:/var/lib/influxdb2:rw
     environment:
-      - INFLUXDB_DB=EHIOT
-      - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
-      - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_DB=EHIOT
+      - DOCKER_INFLUXDB_INIT_BUCKET=Data_EHIOT
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=password
+      - DOCKER_INFLUXDB_INIT_ORG=UNIVAQ
+      # - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
+      # - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
 
 
