@@ -17,8 +17,10 @@
             }
         },
         "debug": {
-            "clearType": "all"
+            "clearType": "all",
+            "filter": "filterAll"
         },
-        "menu-menu-item-sidebar": true
+        "menu-menu-item-sidebar": true,
+        "menu-menu-item-palette": false
     }
 }

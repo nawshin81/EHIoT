@@ -146,7 +146,7 @@
         "usetls": false,
         "tls": "",
         "influxdbVersion": "2.0",
-        "url": "http://ehiot-influxdb-1:8086",
+        "url": "http://ehiot-main2-influxdb-1:8086",
         "timeout": "5",
         "rejectUnauthorized": true
     },
