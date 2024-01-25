@@ -34,7 +34,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./grafana/data:var/lib/grafana:rw
+      - ./grafana:/var/lib/grafana:rw
     depends_on:
       - influxdb
     environment:
