@@ -1,4 +1,4 @@
-**Data Simulation on Wokwi**
+### Data Simulation on Wokwi ###
 
 The links for the data simulation are:
 [Patient 01](https://wokwi.com/projects/385760899767485441),
@@ -7,8 +7,14 @@ The links for the data simulation are:
 
 Keep the tab open on a shared screen, as switching to another screen turns off the simulation.
 
-InfluxDB credentials:
+### InfluxDB credentials: ###
 
-Username: admin
+**Username:** admin
 
-Password: password
+**Password:** password
+
+### Grafana credentials: ###
+
+**Username:** admin
+
+**Password:** password
