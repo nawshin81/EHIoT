@@ -15,6 +15,7 @@ services:
 
   influxdb:
     image: influxdb:latest
+    container_name: influxdbEHIoT
     ports:
       - 8086:8086
     volumes:
